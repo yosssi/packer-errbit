@@ -1,0 +1,28 @@
+{
+	"variables": {
+		"aws_access_key": "",
+		"aws_secret_key": ""
+	},
+	"builders": [{
+		"type": "amazon-ebs",
+		"access_key": "{{user `aws_access_key`}}",
+		"secret_key": "{{user `aws_secret_key`}}",
+		"region": "ap-northeast-1",
+		"source_ami": "ami-09066f08",
+		"instance_type": "t1.micro",
+		"ssh_username": "ubuntu",
+		"ami_name": "packer-errbit {{timestamp}}"
+	}],
+	"provisioners": [{
+		"type": "shell",
+		"inline": [
+			"sleep 30",
+			"sudo apt-get update",
+			"sudo apt-get install -y linux-image-extra-`uname -r`",
+			"sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9",
+			"sudo sh -c \"echo deb http://get.docker.io/ubuntu docker main > /etc/apt/sources.list.d/docker.list\"",
+			"sudo apt-get update",
+			"sudo apt-get install -y lxc-docker"
+		]
+	}]
+}
